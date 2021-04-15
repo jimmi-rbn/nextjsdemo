@@ -1,0 +1,16 @@
+import { Meta, Canvas, Story } from "@storybook/addon-docs/blocks";
+import { Button } from "./Button";
+
+export const story = ({ children, ...args }) => (
+    <Button {...args}>{children || "Button"}</Button>
+);
+
+<Meta title="Button" component={Button} />
+
+# Button
+
+<Canvas>
+    <Story name="default">
+        <Button>Button</Button>
+    </Story>
+</Canvas>
