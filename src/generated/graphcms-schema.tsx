@@ -4506,31 +4506,6 @@ export enum _SystemDateTimeFieldVariation {
   Combined = 'combined'
 }
 
-export type AllPostsForHomeQueryVariables = Exact<{
-  orderBy?: Maybe<PostOrderByInput>;
-  first?: Maybe<Scalars['Int']>;
-}>;
-
-
-export type AllPostsForHomeQuery = (
-  { __typename?: 'Query' }
-  & { posts: Array<(
-    { __typename?: 'Post' }
-    & Pick<Post, 'title' | 'slug' | 'excerpt' | 'date'>
-    & { coverImage?: Maybe<(
-      { __typename?: 'Asset' }
-      & Pick<Asset, 'url'>
-    )>, author?: Maybe<(
-      { __typename?: 'Author' }
-      & Pick<Author, 'name'>
-      & { picture?: Maybe<(
-        { __typename?: 'Asset' }
-        & Pick<Asset, 'url'>
-      )> }
-    )> }
-  )> }
-);
-
 export type PostBySlugQueryVariables = Exact<{
   slug: Scalars['String'];
   stage: Stage;
@@ -4576,55 +4551,32 @@ export type PostBySlugQuery = (
   )> }
 );
 
+export type AllPostsQueryVariables = Exact<{
+  orderBy?: Maybe<PostOrderByInput>;
+  first?: Maybe<Scalars['Int']>;
+}>;
 
-export const AllPostsForHomeDocument = gql`
-    query allPostsForHome($orderBy: PostOrderByInput, $first: Int) {
-  posts(orderBy: $orderBy, first: $first) {
-    title
-    slug
-    excerpt
-    date
-    coverImage {
-      url(transformation: {image: {resize: {fit: crop, width: 2000, height: 1000}}})
-    }
-    author {
-      name
-      picture {
-        url(transformation: {image: {resize: {width: 100, height: 100, fit: crop}}})
-      }
-    }
-  }
-}
-    `;
 
-/**
- * __useAllPostsForHomeQuery__
- *
- * To run a query within a React component, call `useAllPostsForHomeQuery` and pass it any options that fit your needs.
- * When your component renders, `useAllPostsForHomeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAllPostsForHomeQuery({
- *   variables: {
- *      orderBy: // value for 'orderBy'
- *      first: // value for 'first'
- *   },
- * });
- */
-export function useAllPostsForHomeQuery(baseOptions?: Apollo.QueryHookOptions<AllPostsForHomeQuery, AllPostsForHomeQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AllPostsForHomeQuery, AllPostsForHomeQueryVariables>(AllPostsForHomeDocument, options);
-      }
-export function useAllPostsForHomeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllPostsForHomeQuery, AllPostsForHomeQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AllPostsForHomeQuery, AllPostsForHomeQueryVariables>(AllPostsForHomeDocument, options);
-        }
-export type AllPostsForHomeQueryHookResult = ReturnType<typeof useAllPostsForHomeQuery>;
-export type AllPostsForHomeLazyQueryHookResult = ReturnType<typeof useAllPostsForHomeLazyQuery>;
-export type AllPostsForHomeQueryResult = Apollo.QueryResult<AllPostsForHomeQuery, AllPostsForHomeQueryVariables>;
+export type AllPostsQuery = (
+  { __typename?: 'Query' }
+  & { posts: Array<(
+    { __typename?: 'Post' }
+    & Pick<Post, 'title' | 'slug' | 'excerpt' | 'date'>
+    & { coverImage?: Maybe<(
+      { __typename?: 'Asset' }
+      & Pick<Asset, 'url'>
+    )>, author?: Maybe<(
+      { __typename?: 'Author' }
+      & Pick<Author, 'name'>
+      & { picture?: Maybe<(
+        { __typename?: 'Asset' }
+        & Pick<Asset, 'url'>
+      )> }
+    )> }
+  )> }
+);
+
+
 export const PostBySlugDocument = gql`
     query PostBySlug($slug: String!, $stage: Stage!) {
   post(stage: $stage, where: {slug: $slug}) {
@@ -4693,6 +4645,54 @@ export function usePostBySlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type PostBySlugQueryHookResult = ReturnType<typeof usePostBySlugQuery>;
 export type PostBySlugLazyQueryHookResult = ReturnType<typeof usePostBySlugLazyQuery>;
 export type PostBySlugQueryResult = Apollo.QueryResult<PostBySlugQuery, PostBySlugQueryVariables>;
+export const AllPostsDocument = gql`
+    query allPosts($orderBy: PostOrderByInput, $first: Int) {
+  posts(orderBy: $orderBy, first: $first) {
+    title
+    slug
+    excerpt
+    date
+    coverImage {
+      url(transformation: {image: {resize: {fit: crop, width: 2000, height: 1000}}})
+    }
+    author {
+      name
+      picture {
+        url(transformation: {image: {resize: {width: 100, height: 100, fit: crop}}})
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useAllPostsQuery__
+ *
+ * To run a query within a React component, call `useAllPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllPostsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *      first: // value for 'first'
+ *   },
+ * });
+ */
+export function useAllPostsQuery(baseOptions?: Apollo.QueryHookOptions<AllPostsQuery, AllPostsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllPostsQuery, AllPostsQueryVariables>(AllPostsDocument, options);
+      }
+export function useAllPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllPostsQuery, AllPostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllPostsQuery, AllPostsQueryVariables>(AllPostsDocument, options);
+        }
+export type AllPostsQueryHookResult = ReturnType<typeof useAllPostsQuery>;
+export type AllPostsLazyQueryHookResult = ReturnType<typeof useAllPostsLazyQuery>;
+export type AllPostsQueryResult = Apollo.QueryResult<AllPostsQuery, AllPostsQueryVariables>;
 
       export interface PossibleTypesResultData {
         possibleTypes: {

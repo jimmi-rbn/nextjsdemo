@@ -1,4 +1,4 @@
-query allPostsForHome($orderBy: PostOrderByInput, $first: Int) {
+query allPosts($orderBy: PostOrderByInput, $first: Int) {
     posts(orderBy: $orderBy, first: $first) {
         title
         slug
