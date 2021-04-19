@@ -1,0 +1,8 @@
+overwrite: true
+schema: https://api-eu-central-1.graphcms.com/v2/ckn7guqyzd7vg01xrgaqo8ee0/master
+documents: "src/**/*.graphql"
+plugins:
+    - typescript
+    - typescript-operations
+    - typescript-react-apollo
+cacheDir: __generated__

@@ -1,3 +1,22 @@
+# type QueryRoot {
+#     user(id: ID!): User!
+# }
+
+# # type Query {
+# #     user(id: ID!): User!
+# # }
+
+# type User {
+#     id: ID!
+#     username: String!
+#     email: String!
+# }
+
+# schema {
+#   query: QueryRoot
+#   # query: Query
+# }
+
 query allPosts($orderBy: PostOrderByInput, $first: Int) {
     posts(orderBy: $orderBy, first: $first) {
         title

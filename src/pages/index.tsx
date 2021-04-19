@@ -1,31 +1,40 @@
 import Head from "next/head";
 import styles from "@styles/Home.module.css";
 import { Button } from "@components/Button/Button";
-import { getAllPostsForHome } from "../pages/api/graphcms";
-import Link from "next/link";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+// import Link from "next/link";
 
-export default function Home({ posts }) {
-    const client = new ApolloClient({
-        uri:
-            "https://api-eu-central-1.graphcms.com/v2/ckn7guqyzd7vg01xrgaqo8ee0/master",
-        cache: new InMemoryCache(),
+import {
+    AllPostsDocument,
+    PostOrderByInput,
+    useAllPostsQuery,
+} from "../queries/posts.graphql";
+import { initializeApollo } from "../api/apollo";
+
+export default function Home() {
+    const { data, loading, error } = useAllPostsQuery({
+        variables: {
+            orderBy: PostOrderByInput.DateDesc,
+            first: 20,
+        },
     });
 
-    const heroPost = posts[0];
+    console.log("error", error);
+    console.log("loading", loading);
+
+    console.log("data", data);
 
     return (
-        <ApolloProvider client={client}>
-            <div className={styles.container}>
-                <Head>
-                    <title>Create Next App</title>
-                    <link rel="icon" href="/favicon.ico" />
-                </Head>
+        <div className={styles.container}>
+            <Head>
+                slut
+                <title>Create Next App</title>
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
 
-                <main className={styles.main}>
-                    <Button children="Click me!" />
+            <main className={styles.main}>
+                <Button children="Click me!" />
 
-                    <div>title: {heroPost.title}</div>
+                {/* <div>title: {heroPost.title}</div>
                     <div>date: {heroPost.date}</div>
                     <div>author: {heroPost.author.name}</div>
                     <div>slug: {heroPost.slug}</div>
@@ -35,16 +44,22 @@ export default function Home({ posts }) {
                         <a style={{ textDecoration: "underline" }}>
                             {heroPost.slug}
                         </a>
-                    </Link>
-                </main>
-            </div>
-        </ApolloProvider>
+                    </Link> */}
+            </main>
+        </div>
     );
 }
 
-export async function getStaticProps({ preview = false }) {
-    const posts = (await getAllPostsForHome(preview)) || [];
+export async function getStaticProps() {
+    const apolloClient = initializeApollo();
+
+    await apolloClient.query({
+        query: AllPostsDocument,
+    });
+
     return {
-        props: { posts, preview },
+        props: {
+            initialApolloState: apolloClient.cache.extract(),
+        },
     };
 }
