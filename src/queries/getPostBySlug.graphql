@@ -1,28 +1,18 @@
-# type QueryRoot {
-#     user(id: ID!): User!
-# }
-
-# # type Query {
-# #     user(id: ID!): User!
-# # }
-
-# type User {
-#     id: ID!
-#     username: String!
-#     email: String!
-# }
-
-# schema {
-#   query: QueryRoot
-#   # query: Query
-# }
-
-query allPosts($orderBy: PostOrderByInput, $first: Int) {
-    posts(orderBy: $orderBy, first: $first) {
+query getPostBySlug($slug: String!) {
+    post(where: { slug: $slug }) {
         title
         slug
-        excerpt
+        content {
+            html
+        }
         date
+        ogImage: coverImage {
+            url(
+                transformation: {
+                    image: { resize: { fit: crop, width: 2000, height: 1000 } }
+                }
+            )
+        }
         coverImage {
             url(
                 transformation: {
@@ -36,7 +26,7 @@ query allPosts($orderBy: PostOrderByInput, $first: Int) {
                 url(
                     transformation: {
                         image: {
-                            resize: { width: 100, height: 100, fit: crop }
+                            resize: { fit: crop, width: 100, height: 100 }
                         }
                     }
                 )

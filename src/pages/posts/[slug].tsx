@@ -1,9 +1,8 @@
 import { useRouter } from "next/router";
 import ErrorPage from "next/error";
-import { getAllPostsWithSlug, getPostAndMorePosts } from "../api/graphcms";
 import Head from "next/head";
-import { CMS_NAME } from "../api/constants";
-
+import { getSdk } from "../../generated/graphcms-schema";
+import { GraphQLClient } from "graphql-request";
 interface Content {
     html: string;
 }
@@ -19,7 +18,6 @@ interface PostPageProps {
 }
 
 export const Post = ({ post }: PostPageProps) => {
-    console.log("post", post);
     const router = useRouter();
 
     if (!router.isFallback && !post?.slug) {
@@ -38,7 +36,6 @@ export const Post = ({ post }: PostPageProps) => {
                             <Head>
                                 <title>
                                     {post.title} | Next.js Blog Example with{" "}
-                                    {CMS_NAME}
                                 </title>
                                 {/* <meta property="og:image" content={post.ogImage.url} /> */}
                             </Head>
@@ -56,17 +53,38 @@ export const Post = ({ post }: PostPageProps) => {
 };
 
 export async function getStaticProps({ params, preview = false }) {
-    const data = await getPostAndMorePosts(params.slug, preview);
+    // const data = await getPostAndMorePosts(params.slug);
+    const client = new GraphQLClient(process.env.GRAPHCMS_PROJECT_API);
+    const sdk = getSdk(client);
+
+    const { post } = await sdk.getPostBySlug(
+        { slug: params.slug },
+        {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.GRAPHCMS_DEV_AUTH_TOKEN}`,
+        }
+    );
+
     return {
         props: {
-            preview,
-            post: data.post,
+            post,
         },
     };
 }
 
 export async function getStaticPaths() {
-    const posts = await getAllPostsWithSlug();
+    const client = new GraphQLClient(process.env.GRAPHCMS_PROJECT_API);
+
+    const sdk = getSdk(client);
+
+    const { posts } = await sdk.getAllPostsWithSlug(
+        {},
+        {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.GRAPHCMS_DEV_AUTH_TOKEN}`,
+        }
+    );
+
     return {
         paths: posts.map(({ slug }) => ({
             params: { slug },
